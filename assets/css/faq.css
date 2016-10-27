@@ -1,0 +1,15 @@
+.animate-show {
+  opacity: 1;
+}
+
+.animate-show.ng-hide-add, .animate-show.ng-hide-remove {
+  transition: all linear 0.4s;
+}
+
+.animate-show.ng-hide {
+  opacity: 0;
+}
+
+.faq-title {
+	cursor: pointer;
+}

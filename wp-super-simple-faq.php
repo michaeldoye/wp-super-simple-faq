@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: WP Super Simple FAQ
-Plugin URI: https://github.com/michaeldoye/bd-made-to-measure
+Plugin URI: https://github.com/michaeldoye/wp-super-simple-faq
 Description: FAQ for WP!
 Author: Web SEO Online (PTY) LTD
 Author URI: https://webseo.co.za

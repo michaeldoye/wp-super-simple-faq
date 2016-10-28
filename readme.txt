@@ -23,6 +23,8 @@ FAQ for WP!
 
 1. Upload the entire folder to the '/wp-content/plugins/' directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Add FAQ topic and content
+4. Create a new page for FAQ and use the "FAQ Template" page template
 
 == Changelog ==
 

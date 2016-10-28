@@ -54,7 +54,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				add_action( 'wp_ajax_nopriv_ssf_ajax_get_topics_content', array( &$this, 'ssf_ajax_get_topics_content' ) );
 				// Ajax get child topics
 				add_action( 'wp_ajax_ssf_ajax_get_child_topics', array( &$this, 'ssf_ajax_get_child_topics' ) );
-				add_action( 'wp_ajax_nopriv_ssf_ajax_get_child_topics', array( &$this, 'ssf_ajax_get_child_topics' ) );																										
+				add_action( 'wp_ajax_nopriv_ssf_ajax_get_child_topics', array( &$this, 'ssf_ajax_get_child_topics' ) );
+				// 
+				add_filter( 'manage_faq_posts_columns', array( &$this, 'my_columns' ) );
+				//
+				add_action( 'manage_faq_posts_custom_column',  array( &$this, 'my_show_columns' ), 10, 2 );																										
 
 	            $this->templates = array();
 
@@ -267,7 +271,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					'show_in_menu' => true,
 					'show_in_admin_bar' => true,
 					'menu_position' => 5,
-					'menu_icon' => null,
+					'menu_icon' => 'dashicons-category',
 					'capability_type' => 'post',
 					'hierarchical' => true,
 					'supports' => array('title','editor','author','thumbnail','excerpt','custom-fields','revisions','page-attributes','post-formats'),
@@ -279,6 +283,22 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				);
 				register_post_type( 'faq', $args );				
 			}
+
+
+			public function my_columns( $columns ) {
+			    $columns['topics'] = 'FAQ Topics';
+			    return $columns;
+			}
+
+
+			public function my_show_columns( $name, $post_id ) {
+			    global $post;
+			    switch ($name) {
+			        case 'topics':
+			            $views = get_the_term_list( $post_id , 'FAQ Topics' , '' , ',' , '' );
+			            echo $views;
+			    }
+			}						
 
 
 			public function ssf_ajax_get_topics() {

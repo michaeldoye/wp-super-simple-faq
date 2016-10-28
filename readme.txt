@@ -21,7 +21,7 @@ FAQ for WP!
 
 == Installation ==
 
-1. Upload the entire 'woocommerce-acme' folder to the '/wp-content/plugins/' directory
+1. Upload the entire folder to the '/wp-content/plugins/' directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Changelog ==

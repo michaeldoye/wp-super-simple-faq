@@ -1,4 +1,4 @@
-=== WooCommerce Acme ===
+=== WP Super Simple FAQ ===
 Contributors: Michael Doye
 Tags: woocommerce
 Stable tag: 1.0.0
@@ -17,7 +17,7 @@ Version: 0.0.1
 
 == Description ==
 
-This is an example WooCommerce plugin
+FAQ for WP!
 
 == Installation ==
 

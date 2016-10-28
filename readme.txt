@@ -1,10 +1,10 @@
-=== WP Super Simple FAQ ===
+=== WooCommerce Acme ===
 Contributors: Michael Doye
 Tags: woocommerce
 Stable tag: 1.0.0
 
 Plugin Name: WP Super Simple FAQ
-Plugin URI: https://github.com/michaeldoye/wp-super-simple-faq
+Plugin URI: https://github.com/michaeldoye/bd-made-to-measure
 Description: FAQ for WP!
 Author: Web SEO Online (PTY) LTD
 Author URI: https://webseo.co.za
@@ -17,7 +17,7 @@ Version: 0.0.1
 
 == Description ==
 
-FAQ for WP!
+This is an example WooCommerce plugin
 
 == Installation ==
 

@@ -55,7 +55,22 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				// Ajax get child topics
 				add_action( 'wp_ajax_ssf_ajax_get_child_topics', array( &$this, 'ssf_ajax_get_child_topics' ) );
 				add_action( 'wp_ajax_nopriv_ssf_ajax_get_child_topics', array( &$this, 'ssf_ajax_get_child_topics' ) );																										
-				
+
+	            $this->templates = array();
+
+	            // Add a filter to the attributes metabox to inject template into the cache.
+	            add_filter( 'page_attributes_dropdown_pages_args', array( &$this, 'register_project_templates' ) );
+	            // Add a filter to the save post to inject out template into the page cache
+	            add_filter( 'wp_insert_post_data', array( &$this, 'register_project_templates' ) );
+	            // Add a filter to the template include to determine if the page has our 
+	            // template assigned and return it's path
+	            add_filter( 'template_include', array( &$this, 'view_project_template') );
+
+	            // Add templates to this array.
+	            $this->templates = array(
+	                'wp-ssfaq-template.php' => 'FAQ Template',
+	            );	
+
 				// indicates we are running the admin
 				if ( is_admin() ) {
 					// ...
@@ -64,33 +79,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				// indicates we are being served over ssl
 				if ( is_ssl() ) {
 					// ...
-				}
-
-	            $this->templates = array();
-
-	            // Add a filter to the attributes metabox to inject template into the cache.
-	            add_filter(
-	                'page_attributes_dropdown_pages_args',
-	                 array( $this, 'register_project_templates' ) 
-	            );
-
-	            // Add a filter to the save post to inject out template into the page cache
-	            add_filter(
-	                'wp_insert_post_data', 
-	                array( $this, 'register_project_templates' ) 
-	            );
-
-	            // Add a filter to the template include to determine if the page has our 
-	            // template assigned and return it's path
-	            add_filter(
-	                'template_include', 
-	                array( $this, 'view_project_template') 
-	            );
-
-	            // Add your templates to this array.
-	            $this->templates = array(
-	                'wp-ssfaq-template.php' => 'FAQ Template',
-	            );				
+				}	            			
 			}
 
 
@@ -106,7 +95,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					wp_enqueue_script( 'angular_js', plugin_dir_url( __FILE__ ) . 'assets/js/angular-1.4.6-min.js' );	
 					wp_enqueue_script( 'angular_animate_js', plugin_dir_url( __FILE__ ) . 'assets/js/angular-animate.min.js' );				 
 					wp_enqueue_script( 'faq_scripts', plugin_dir_url( __FILE__ ) . 'assets/js/faq-script.js', array( 'jquery', 'angular_js' ) );
-
+			    	// Enqueue nprogress js
+			    	wp_enqueue_script( 'nprogress', 'https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js', array( 'jquery' ) );					
 					// CSS
 					wp_register_style( 'faq_css', plugin_dir_url( __FILE__ ) .'assets/css/faq.css', array(), '20161026' );
 					wp_enqueue_style( 'faq_css' );				
@@ -183,28 +173,28 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 		    public function register_project_templates( $atts ) {
 
-		            // Create the key used for the themes cache
-		            $cache_key = 'page_templates-' . md5( get_theme_root() . '/' . get_stylesheet() );
+		        // Create the key used for the themes cache
+		        $cache_key = 'page_templates-' . md5( get_theme_root() . '/' . get_stylesheet() );
 
-		            // Retrieve the cache list. 
-		            // If it doesn't exist, or it's empty prepare an array
-		            $templates = wp_get_theme()->get_page_templates();
-		            if ( empty( $templates ) ) {
-		                $templates = array();
-		            } 
+		        // Retrieve the cache list. 
+		        // If it doesn't exist, or it's empty prepare an array
+		        $templates = wp_get_theme()->get_page_templates();
+		        if ( empty( $templates ) ) {
+		            $templates = array();
+		        } 
 
-		            // New cache, therefore remove the old one
-		            wp_cache_delete( $cache_key , 'themes');
+		        // New cache, therefore remove the old one
+		        wp_cache_delete( $cache_key , 'themes');
 
-		            // Now add our template to the list of templates by merging our templates
-		            // with the existing templates array from the cache.
-		            $templates = array_merge( $templates, $this->templates );
+		        // Now add our template to the list of templates by merging our templates
+		        // with the existing templates array from the cache.
+		        $templates = array_merge( $templates, $this->templates );
 
-		            // Add the modified cache to allow WordPress to pick it up for listing
-		            // available templates
-		            wp_cache_add( $cache_key, $templates, 'themes', 1800 );
+		        // Add the modified cache to allow WordPress to pick it up for listing
+		        // available templates
+		        wp_cache_add( $cache_key, $templates, 'themes', 1800 );
 
-		            return $atts;
+		        return $atts;
 
 		    } 
 
@@ -214,25 +204,25 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		     */
 		    public function view_project_template( $template ) {
 
-		            global $post;
+		        global $post;
 
-		            if (!isset($this->templates[get_post_meta( 
-		                $post->ID, '_wp_page_template', true 
-		            )] ) ) {
+		        if (!isset($this->templates[get_post_meta( 
+		            	$post->ID, '_wp_page_template', true 
+		        	)] ) ) {
 		                return $template;
-		            } 
+		        } 
 
-		            $file = plugin_dir_path(__FILE__). get_post_meta( 
-		                $post->ID, '_wp_page_template', true 
-		            );
+		        $file = plugin_dir_path(__FILE__). get_post_meta( 
+		            $post->ID, '_wp_page_template', true 
+		        );
 
-		            // Just to be safe, we check if the file exist first
-		            if( file_exists( $file ) ) {
-		                return $file;
-		            } 
-		            else { echo $file; }
+		        // Just to be safe, we check if the file exist first
+		        if( file_exists( $file ) ) {
+		            return $file;
+		        } 
+		        else { echo $file; }
 
-		            return $template;
+		        return $template;
 
 		    }
 
@@ -341,7 +331,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 							array(
 								'taxonomy' => 'FAQ Topics',
 								'field'    => 'id',
-								'terms' => $_GET['id']
+								'terms' => intval( $_GET['id'] )
 							),
 						),
 					);

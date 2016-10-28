@@ -29,25 +29,27 @@ app
     $scope.parentTopic = 'undefined';
 
     DataLoader.getFaqTopics().then(function(response) {
-      //console.log(response.data);
       $scope.faqTopics = response.data;
     });
 
     $scope.getChildTopics = function(parent) {
-
+      NProgress.start();
       $scope.childTopic  = 'undefined';
 
       DataLoader.getFaqChildTopics(parent).then(function(response) {
         $scope.childTopics = response.data;
+        $scope.postObject = '';
+        NProgress.done();
       });
 
     }
 
     $scope.getTopicContent = function(postId) {
+      NProgress.start();
 
       DataLoader.getFaqTopicsContent(postId).then(function(response) {
-        console.log(response.data);
         $scope.postObject = response.data;
+        NProgress.done();
       });
 
     }
